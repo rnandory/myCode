@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rnandory</groupId>
-	<artifactId>sort</artifactId>
+	<artifactId>codeJourney</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sort Maven Webapp</name>
+	<name>codeJourney</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -23,6 +23,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>sort</finalName>
+		<finalName>codeJourney</finalName>
 	</build>
 </project>

@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class Quick {
 
 	public static void main(String[] args) {
-		int[] arr = { 40, 20, 50, 10, 30, 70 };
+		int[] arr = { 2, 1};
 		System.out.println(Arrays.toString(arr));
 
 		quickSort(arr, 0, arr.length - 1);
@@ -16,49 +16,37 @@ public class Quick {
 		if (start == end)
 			return;
 		
-		int pivot = (start + end)/2; // start~ pivot/~end
+		int pivot = partition(arr, start, end);
 		
-		pivot = partition(arr, start, pivot, end);
-		
-		
-		quickSort(arr, start, pivot);
-		quickSort(arr, pivot, end);		
+		if (start < pivot-1)
+			quickSort(arr, start, pivot-1);
+		if (pivot+1 < end)
+			quickSort(arr, pivot+1, end);		
 	}
 
-	private static int partition(int[] arr, int start, int pivot, int end) {
+	private static int partition(int[] arr, int start, int end) {
 		int l = start;
-		int r = end-1;
+		int r = end;
+		int pivot = arr[(start + end)/2];
 		
-		// swap end, pivot
-		int temp = arr[end];
-		arr[end] = arr[pivot];
-		arr[pivot] = temp;
-		
-		while (true) {
-			while (arr[l] < arr[end]) {
+		while (l<=r) {
+			while (arr[l] < pivot)
 				l++;
-			}
-			
-			if (l>=r)
-				break;
 				
-			while (arr[end] < arr[r]) {
+			while (pivot < arr[r])
 				r--;
-			}
-			
-			// swap
-			temp = arr[l];
-			arr[l] = arr[r];
-			arr[r] = temp;
-			l++; r--;			
+
+			if (l <= r)
+				swap(arr, l++, r--);			
 		}
 		
-		// swap l, pivot
-		temp = arr[end];
-		arr[end] = arr[l];
-		arr[l] = temp;
-		
 		return l;
+	}
+	
+	private static void swap(int[] arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
 	}
 
 }
