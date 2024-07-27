@@ -1,9 +1,23 @@
 package teamPrj.diary.repository;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
-public interface Repository<T> {
+import teamPrj.diary.Entity.Diary;
 
-	List<T> findAll();
+public interface Repository<T> {	
+
+	List<T> findAll() throws FileNotFoundException, IOException;
+
+	Diary findById(int id) throws IOException;
+	
+	void save(T entity) throws FileNotFoundException, IOException;
+	
+	int getLatestId();
+	
+	int setLatestId(int id);
+	
+	
 
 }

@@ -21,10 +21,31 @@ public class BoardController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int page = 1;
+		String page_ = req.getParameter("p");
+		
+		if (page_ != null)
+			page = Integer.parseInt(page_);
 
-		List<Diary> list = service.getList();
-
+		List<Diary> list = service.getList(page);
+		
+		List<Integer> pages = service.getPages(page);
+		
+		int lastPage = pages.getLast();
+		int prevPage = page-1;
+		int nextPage = page+1;
+		if (prevPage<1)
+			prevPage = 1;
+		if (nextPage > lastPage)
+			nextPage = lastPage;
+		
 		req.setAttribute("list", list);
+		req.setAttribute("page", page);
+		req.setAttribute("pages", pages.subList(1, pages.size()-1));
+		req.setAttribute("prevPage", prevPage);
+		req.setAttribute("nextPage", nextPage);
+		req.setAttribute("lastPage", lastPage);
+		
 
 		req.getRequestDispatcher("/WEB-INF/view/diary/board.jsp").forward(req, resp);
 	}
