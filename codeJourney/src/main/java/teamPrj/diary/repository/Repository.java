@@ -17,7 +17,9 @@ public interface Repository<T> {
 	int getLatestId();
 	
 	int setLatestId(int id);
-	
-	
 
+	void clear() throws FileNotFoundException, IOException;
+
+	void deleteImgById(int id, String imgRealPath) throws IOException;
+	
 }

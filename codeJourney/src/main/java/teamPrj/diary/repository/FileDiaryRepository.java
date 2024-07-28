@@ -1,11 +1,11 @@
 package teamPrj.diary.repository;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -81,9 +81,10 @@ public class FileDiaryRepository implements Repository<Diary> {
 		List<Diary> fullList = this.findAll();
 		
 		int index = Collections.binarySearch(fullList, new Diary(id, "", "", ""), (d1, d2) -> Integer.compare(d2.getId(), d1.getId()));
-		
+		// 만약 해당 id의 글이 없으면? -1
+		if (index == -1)
+			return null;
 		Diary diary = fullList.get(index);
-		
 		return diary;
 	}
 
@@ -106,6 +107,35 @@ public class FileDiaryRepository implements Repository<Diary> {
 		ps.printf("\n%d,%s,%s,%s", entity.getId(), entity.getTitle(), entity.getContent(), entity.getImgName());
 		ps.close();
 		fos.close();
+	}
+
+	@Override
+	public void clear() throws IOException {
+		FileOutputStream fos = new FileOutputStream("D:/again/myCode/myCode/res/diaryList.csv");
+		PrintStream ps = new PrintStream(fos);
+		
+		ps.print("id,title,content,imgName");
+		ps.close();
+		fos.close();
+	}
+
+	@Override
+	public void deleteImgById(int id, String imgRealPath) throws IOException {
+		Diary diary = this.findById(id);
+		
+		String path = imgRealPath;
+		if (!diary.getImgName().equals(""))
+			path += File.separator + diary.getImgName();
+		
+		System.out.println(path);		
+		File file = new File(path);
+		if (file.exists()) {
+			if (file.delete())
+				System.out.println("파일삭제 성공");
+			else
+				System.out.println("파일삭제 실패");
+		} else
+			System.out.println("파일이 존재하지 않습니다.");
 	}
 
 		

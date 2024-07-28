@@ -8,25 +8,24 @@
 <title>추억다이어리 작성글</title>
 </head>
 <body>
-	<h1></h1>
+	
+	<section>
+		<h1>다이어리 게시물</h1>
+		<div>id ${diary.id}</div>
+		<hr>
+		<div>${diary.title}</div>
+		<hr>
+		<div><img alt="이미지 없음" src="${imgPath}"></div>
+		<div>${diary.content}</div>
+		<hr>
+	</section>
 
-	<table>
-		<thead>
-			<tr>
-				<th>${diary.id}</th>
-				<th>${diary.title}</th>
-			</tr>
-		</thead>
-
-		<tbody>			
-				<tr>
-					<td colspan="2">${diary.content}</td>					
-				</tr>			
-		</tbody>
-	</table>
+	
 	
 	<div>
 		<a href="${previousPage}">목록으로</a>
+		<a href="edit?id=${diary.id}">수정</a>
+		<a href="delete?id=${diary.id}">삭제</a>
 	</div>
 
 </body>

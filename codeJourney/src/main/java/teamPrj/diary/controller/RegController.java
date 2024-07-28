@@ -1,6 +1,5 @@
 package teamPrj.diary.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class RegController extends HttpServlet {
 		// 이전페이지 url
 		String referer = req.getHeader("Referer");
 		if (referer == null)
-			referer = "#";
+			referer = "http://localhost:8080/codeJourney/diary/board";
 		
         req.setAttribute("previousPage", referer);
 		req.getRequestDispatcher("/WEB-INF/view/diary/reg.jsp").forward(req, resp);
@@ -40,10 +39,9 @@ public class RegController extends HttpServlet {
 		
 		List<Part> parts = new ArrayList<>(req.getParts());		
 		
-		String realPath = req.getServletContext().getRealPath("/diary/imgUpload");
-		System.out.println(realPath);
+		String imgRealPath = req.getServletContext().getRealPath("/diary/imgUpload");
 		
-		int id = service.uploadDiary(parts, realPath);
+		int id = service.uploadDiary(parts, imgRealPath);
 		String diaryDetailPath = req.getContextPath() + "/diary/detail?id=" + id; 
 		resp.sendRedirect(diaryDetailPath);
 	}

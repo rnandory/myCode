@@ -40,12 +40,17 @@ public class DiaryService {
 		int startIndex = postPerPage * (page - 1);
 		int endIndex = startIndex + postPerPage;
 
+		List<Diary> list;
 		if (startIndex >= fullList.size())
-			endIndex = startIndex = fullList.size() - 1;
-		else if (endIndex > fullList.size())
+			list = new ArrayList<Diary>();
+		else if (endIndex > fullList.size()) {
 			endIndex = fullList.size();
-
-		List<Diary> list = fullList.subList(startIndex, endIndex);
+			list = fullList.subList(startIndex, endIndex);
+		}
+		else
+			list = fullList.subList(startIndex, endIndex);
+			
+		
 
 		return list;
 	}
@@ -80,37 +85,47 @@ public class DiaryService {
 		return diary;
 	}
 
-	public int uploadDiary(List<Part> parts, String realPath) throws IOException {
+	public int uploadDiary(List<Part> parts, String imgRealPath) throws IOException {
 		int id = repository.getLatestId() + 1;
 		repository.setLatestId(id);
+
+		repository.save(this.parseMultipartToDiary(id, parts, imgRealPath));
+
+		return id;
+	}
+
+	private Diary parseMultipartToDiary(int id, List<Part> parts, String imgRealPath) throws IOException {
 		String uploadPath;
 		String title = "";
 		String content = "";
 		String imgName = "";
 
 		// 경로생성
-		File pathFile = new File(realPath);
+		File pathFile = new File(imgRealPath);
 		if (!pathFile.exists())
 			pathFile.mkdirs();
 
+		// title, content, img part꺼내서 처리
 		for (Part part : parts) {
-			
-			if (part.getSize()==0)
+
+			if (part.getSize() == 0)
 				continue;
-				
+
 			String partName = part.getName();
-			
+
 			if (partName.equals("img")) {
 				String fileName = part.getSubmittedFileName();
 				imgName = id + "_" + fileName;
-				uploadPath = realPath + File.separator + imgName;
+				uploadPath = imgRealPath + File.separator + imgName;
 
 				InputStream is = part.getInputStream();
 				FileOutputStream fos = new FileOutputStream(uploadPath);
 
 				byte[] buf = new byte[1024];
 				for (int size = 0; (size = is.read(buf)) != -1;)
-					fos.write(buf, 0, size);				
+					fos.write(buf, 0, size);
+				is.close();
+				fos.close();
 
 			} else if (partName.equals("title")) {
 				InputStream is = part.getInputStream();
@@ -118,34 +133,80 @@ public class DiaryService {
 				title = bf.readLine();
 				bf.close();
 				is.close();
-				
+
 			} else {
 				InputStream is = part.getInputStream();
 				BufferedReader bf = new BufferedReader(new InputStreamReader(is));
-				
+
 				StringBuilder sb = new StringBuilder();
 				String line;
-				while ((line = bf.readLine())!=null) {
+				while ((line = bf.readLine()) != null) {
 					sb.append(line + "\n");
 				}
-				
+
 				if (sb.length() > 0) {
-		            sb.setLength(sb.length() - 1);
-		        }
-				
+					sb.setLength(sb.length() - 1);
+				}
+
 				bf.close();
 				is.close();
-				
-				content = sb.toString();
-			}			
-		}
-		repository.save(new Diary(id, title, content, imgName));
 
-		return id;
+				content = sb.toString();
+			}
+		}
+		return new Diary(id, title, content, imgName);
 	}
 
-	public int getLatestId() {		
+	public int getLatestId() {
 		return repository.getLatestId();
+	}
+
+	public void editDiary(int id, List<Part> parts, String imgRealPath) throws IOException {
+		// diaryList.csv에서 id로 게시물 찾아서 수정
+		// 1. 구 이미지파일 삭제
+		// 2. 수정될 작성글 id, title, content, imgName확보
+		// 3. getList로 모든 작성글 list로 가져옴
+		// 4. diaryList.csv덮어쓰기
+
+		// /codeJourney/diary/imgUpload에서 구 이미지파일 삭제
+		repository.deleteImgById(id, imgRealPath);
+		
+		Diary editedDiary = this.parseMultipartToDiary(id, parts, imgRealPath);
+
+		List<Diary> list = this.getList();
+		// 덮어쓰기 위한 diaryList.csv리셋
+		repository.clear();
+
+		for (Diary diary : list) {
+			if (diary.getId() == id) {
+				repository.save(editedDiary);
+			}
+			else
+				repository.save(diary);
+		}
+
+	}
+
+	public void deleteDiary(int id, String imgRealPath) throws FileNotFoundException, IOException {
+
+		// 1. 이미지파일 삭제
+		// 2. service.getList()로 리스트 불러옴
+		// 3. id로 체크하면서 덮어쓰기
+
+		// /codeJourney/diary/imgUpload에서 이미지파일 삭제
+		repository.deleteImgById(id, imgRealPath);
+		
+		List<Diary> list = this.getList();
+		// 덮어쓰기 위한 diaryList.csv리셋
+		repository.clear();
+		
+		
+		for (Diary diary : list) {
+			if (diary.getId() == id) {
+				continue;
+			}
+			repository.save(diary);
+		}
 	}
 
 }
