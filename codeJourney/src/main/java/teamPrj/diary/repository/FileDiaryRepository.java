@@ -16,8 +16,8 @@ public class FileDiaryRepository implements Repository<Diary> {
 
 	static int latestId;
 
-	static String diaryListPath = "C:\\8th\\Work\\myCode\\res\\diaryList.csv";
-	// "D:/again/myCode/myCode/res/diaryList.csv"
+//	static String diaryListPath = "C:\\8th\\Work\\myCode\\res\\diaryList.csv";
+	static String diaryListPath = "D:/again/myCode/myCode/res/diaryList.csv";
 
 	static {
 		FileInputStream fis;
@@ -53,7 +53,7 @@ public class FileDiaryRepository implements Repository<Diary> {
 	public List<Diary> findAll() throws IOException {
 		List<Diary> list = new ArrayList<>();
 //		"D:/again/myCode/myCode/res/diaryList.csv"
-		FileInputStream fis = new FileInputStream("C:\\\\8th\\\\Work\\\\myCode\\\\res\\\\diaryList.csv");
+		FileInputStream fis = new FileInputStream(diaryListPath);
 		Scanner scan = new Scanner(fis);
 
 		scan.nextLine();
@@ -128,7 +128,7 @@ public class FileDiaryRepository implements Repository<Diary> {
 		Diary diary = this.findById(id);
 
 		String path = imgRealPath;
-		if (!diary.getImgName().equals(""))
+		if (!diary.getImgName().equals("placeholder.jpg"))
 			path += File.separator + diary.getImgName();
 
 		System.out.println(path);

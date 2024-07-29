@@ -33,16 +33,16 @@ public class DetailController extends HttpServlet {
 			req.getRequestDispatcher("/WEB-INF/view/diary/error.jsp").forward(req, resp);
 			return;
 		}
-		// 이전페이지 url
+		// previousPage 이전페이지 url
 		String referer = req.getHeader("Referer");
 		if (referer == null)
 			referer = "http://localhost:8080/codeJourney/diary/board";
 		else if (!referer.startsWith("http://localhost:8080/codeJourney/diary/board"))
 			referer = "http://localhost:8080/codeJourney/diary/board";
 		
-		String imgPath = "imgUpload" + File.separator + diary.getImgName();
+//		String imgPath = "imgUpload" + File.separator + diary.getImgName();
 		
-		req.setAttribute("imgPath", imgPath);
+//		req.setAttribute("imgPath", imgPath);
 		req.setAttribute("previousPage", referer);
 		req.setAttribute("diary", diary);
 

@@ -59,7 +59,8 @@ public class DiaryService {
 
 		int firstPage = 1;
 		pages.add(firstPage);
-		int lastPage = Math.ceilDiv(repository.findAll().size(), 6);
+		int size = repository.findAll().size();
+		int lastPage = Math.ceilDiv(size, 10);
 
 		for (int i = 0, j = -2; pages.size() < 6; i++, j++) {
 			int page = current + j;
@@ -74,7 +75,6 @@ public class DiaryService {
 		}
 
 		pages.add(lastPage);
-
 		return pages;
 	}
 
@@ -97,7 +97,7 @@ public class DiaryService {
 		String uploadPath;
 		String title = "";
 		String content = "";
-		String imgName = "";
+		String imgName = "placeholder.jpg";
 
 		// 경로생성
 		File pathFile = new File(imgRealPath);

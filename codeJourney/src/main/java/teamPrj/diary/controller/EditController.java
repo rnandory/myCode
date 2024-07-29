@@ -40,8 +40,6 @@ public class EditController extends HttpServlet {
 		String referer = req.getHeader("Referer");
 		if (referer == null)
 			referer = "http://localhost:8080/codeJourney/diary/board";
-		else if (!referer.startsWith("http://localhost:8080/codeJourney/diary/board"))
-			referer = "http://localhost:8080/codeJourney/diary/board";
 
 		req.setAttribute("previousPage", referer);
 		req.setAttribute("diary", diary);
