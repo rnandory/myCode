@@ -10,8 +10,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xml.sax.InputSource;
-
 import jakarta.servlet.http.Part;
 import teamPrj.diary.Entity.Diary;
 import teamPrj.diary.repository.FileDiaryRepository;
@@ -34,7 +32,7 @@ public class DiaryService {
 
 	public List<Diary> getList(int page) throws FileNotFoundException, IOException {
 
-		int postPerPage = 6;
+		int postPerPage = 10;
 		List<Diary> fullList = repository.findAll();
 
 		int startIndex = postPerPage * (page - 1);
@@ -94,6 +92,7 @@ public class DiaryService {
 		return id;
 	}
 
+	// 파일업로드도 같이 처리
 	private Diary parseMultipartToDiary(int id, List<Part> parts, String imgRealPath) throws IOException {
 		String uploadPath;
 		String title = "";

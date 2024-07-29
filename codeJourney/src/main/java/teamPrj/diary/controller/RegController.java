@@ -40,7 +40,7 @@ public class RegController extends HttpServlet {
 		List<Part> parts = new ArrayList<>(req.getParts());		
 		
 		String imgRealPath = req.getServletContext().getRealPath("/diary/imgUpload");
-		
+		System.out.println(imgRealPath);
 		int id = service.uploadDiary(parts, imgRealPath);
 		String diaryDetailPath = req.getContextPath() + "/diary/detail?id=" + id; 
 		resp.sendRedirect(diaryDetailPath);
